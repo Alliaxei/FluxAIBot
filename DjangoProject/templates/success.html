@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оплата успешна</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #28a745;
+        }
+        p {
+            font-size: 18px;
+        }
+        .nickname-container {
+            margin-top: 20px;
+            background: #f1f1f1;
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .nickname {
+            font-weight: bold;
+            font-size: 20px;
+            color: #333;
+            user-select: all;
+        }
+        .copy-button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 5px;
+        }
+        .copy-button svg {
+            width: 20px;
+            height: 20px;
+            fill: #007bff;
+            transition: fill 0.2s ease-in-out;
+        }
+        .copy-button:hover svg {
+            fill: #0056b3;
+        }
+        .success-message {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #28a745;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Оплата прошла успешно ✅</h1>
+     <p>Для подтверждения перейдите в Telegram бота и нажмите на кнопку <strong style="color: #28a745; background: #e9f5eb; padding: 5px 10px; border-radius: 5px;">Проверить</strong></p>
+
+
+        <div class="nickname-container">
+            <span class="nickname" id="nickname">@artifyme_bot</span>
+            <button class="copy-button" onclick="copyNickname()" title="Скопировать">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1Zm4 4H8a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Zm0 18H8V7h12v16Z"/>
+                </svg>
+            </button>
+        </div>
+        <p class="success-message" id="successMessage">Скопировано в буфер обмена!</p>
+    </div>
+
+    <script>
+        function copyNickname() {
+            const nickname = document.getElementById("nickname").innerText;
+            navigator.clipboard.writeText(nickname).then(() => {
+                const successMessage = document.getElementById("successMessage");
+                successMessage.style.display = "block";
+                setTimeout(() => {
+                    successMessage.style.display = "none";
+                }, 2000);
+            }).catch(err => {
+                console.error("Ошибка копирования: ", err);
+            });
+        }
+    </script>
+</body>
+</html>
