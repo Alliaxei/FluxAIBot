@@ -1,0 +1,52 @@
+services:
+  bot:
+    build: ./AIBot
+    container_name: fluxai_bot
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - web
+    volumes:
+      - ./AIBot:/app
+    networks:
+      - app_network
+    command: >
+      sh -c "pip install -r requirements.txt && python main.py"
+  web:
+    build: ./DjangoProject
+    container_name: django_web
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - db
+    volumes:
+      - ./DjangoProject:/app
+    ports:
+      - "8000:8000"
+    networks:
+      - app_network
+    command: >
+      sh -c "pip install -r requirements.txt && gunicorn DjangoProject.wsgi:application --bind 0.0.0.0:8000 --workers 4"
+
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "0.0.0.0:5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+networks:
+  app_network:
+volumes:
+  postgres_data:
