@@ -13,3 +13,5 @@ def generate_payment_link(user_id, amount):
                    f"&oa={amount}&currency={currency}&o={order_id}&s={sign}&em=123")
     return order_id, payment_url
 
+
+

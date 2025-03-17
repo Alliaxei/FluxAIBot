@@ -1,8 +1,8 @@
-"""empty message
+"""initial
 
-Revision ID: d9f61592388e
+Revision ID: 2c65442e60fc
 Revises: 
-Create Date: 2025-03-10 15:18:35.299641
+Create Date: 2025-03-16 17:22:59.579890
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'd9f61592388e'
+revision: str = '2c65442e60fc'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -51,7 +51,8 @@ def upgrade() -> None:
     op.create_table('token_transactions',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('amount', sa.Integer(), nullable=False),
+    sa.Column('amount', sa.Integer(), nullable=True),
+    sa.Column('stars_amount', sa.Integer(), nullable=True),
     sa.Column('transaction_date', sa.DateTime(), nullable=False),
     sa.Column('transaction_type', sa.String(length=15), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='Cascade'),

@@ -35,7 +35,9 @@ class Transaction(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     order_id: Mapped[str] = mapped_column(String(50), nullable=False, unique=True)
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
-    amount: Mapped[int] = mapped_column()
+    amount: Mapped[int] = mapped_column(nullable=True)
+    stars_amount: Mapped[int] = mapped_column(nullable=True)
+
     transaction_date: Mapped[datetime] = mapped_column(DateTime, default=func.now())
     transaction_type: Mapped[str] = mapped_column(String(15), nullable=False)
     transaction_status: Mapped[str] = mapped_column(String(15), nullable=True)
@@ -60,7 +62,8 @@ class TokenTransaction(Base):
     __tablename__ = 'token_transactions'
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id', ondelete='Cascade'), nullable=False)
-    amount: Mapped[int] = mapped_column()
+    amount: Mapped[int] = mapped_column(nullable=True)
+
     transaction_date: Mapped[datetime] = mapped_column(DateTime)
     transaction_type: Mapped[str] = mapped_column(String(15), nullable=False)
 

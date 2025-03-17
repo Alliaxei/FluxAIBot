@@ -9,6 +9,7 @@ from apps.handlers.commands import router as commands_router
 from apps.handlers.callbacks import router as callbacks_router
 from apps.handlers.states import router as states_router
 from apps.commands import set_bot_commands
+from apps.handlers.invoice_handlers import router as invoice_router
 
 
 async def main():
@@ -19,6 +20,7 @@ async def main():
     dp.include_router(commands_router)
     dp.include_router(callbacks_router)
     dp.include_router(states_router)
+    dp.include_router(invoice_router)
 
 
     try:

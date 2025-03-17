@@ -3,12 +3,11 @@ from aiogram.filters import Command
 from aiogram.types import Message
 
 from aiogram.fsm.context import FSMContext
-from aiogram.utils import markdown
 
 from apps.keyboards import keyboards as kb
 from apps.database import requests
 from apps.handlers.callbacks import show_profile
-from apps.states import ImageState, BuyingState
+from apps.states import ImageState
 router = Router()
 
 @router.message(Command('start'))
@@ -24,21 +23,24 @@ async def help_handler(message: Message):
         "Flux AI — это бот для создания изображений по текстовому описанию! 🖼️\n\n"
         "💰 *Система кредитов*\n"
         "— Для генерации изображений требуются кредиты.\n"
-        "— Для пополнения баланса, вы можете использовать *систему оплаты через FreeKassa*.\n\n"
+        "— Для пополнения баланса, вы можете использовать *систему оплаты через FreeKassa* или *Telegram Stars*.\n\n"
         "📌 *Как использовать Flux AI?*\n"
         "1️⃣ Для начала выберите параметры для создания изображения:\n"
         "   — *Стиль*\n"
         "   — *Качество*\n"
-        "Эти настройки можно выбрать в меню или через меню быстрого доступа.\n"
+        "Эти настройки можно выбрать в меню или через меню быстрого доступа /settings.\n"
         "2️⃣ Когда параметры настроены, выберите функцию создания изображения.\n"
         "3️⃣ Введите текстовое описание (промт) для генерации изображения.\n\n"
         "🖱️ *Меню быстрого доступа*\n"
         "В любое время вы можете использовать меню для быстрого выбора нужной опции: создать изображение, перейти в личный кабинет или пополнить баланс.\n\n"
         "🔄 *Перезапуск бота*\n"
         "Если возникли проблемы, просто используйте команду /start для перезапуска бота. 🔁\n\n"
+        "🛠️ *Техподдержка*\n"
+        "Если у вас возникли вопросы или проблемы, используйте команду /support для связи с нашей техподдержкой.\n\n"
         "*Пусть ваша креативность не имеет границ с Flux AI!* 🚀",
         parse_mode="Markdown"
     )
+
 
 @router.message(Command('profile'))
 async def profile_handler(message: Message):
@@ -51,15 +53,10 @@ async def generate_handler(message: Message, state: FSMContext):
     await state.set_state(ImageState.waiting_for_prompt)
 
 
-@router.message(Command('buy'))
-async def buy_handler(message: Message, state: FSMContext):
 
-    sent_message = await message.answer(
-        'Выберите сумму для пополнения 💸',
-        reply_markup=kb.credits
-    )
-    await state.set_state(BuyingState.waiting_for_transaction)
-    await state.update_data(message_id=sent_message.message_id)
+@router.message(Command('buy'))
+async def buy_handler(message: Message):
+    await message.answer(text="Выберите способ для пополнения", reply_markup=kb.set_method_payment)
 
 @router.message(Command('settings'))
 async def settings_handler(message: Message):

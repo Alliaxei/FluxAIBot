@@ -1,4 +1,6 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+
 from apps.database import requests
 from apps.services.image_generattion import calculate_total_price
 
@@ -25,6 +27,26 @@ credits = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='⬅️ Назад', callback_data='back')]
 ])
 
+def payment_keyboard() -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+
+    # Создаем кнопки вручную
+    buttons = [
+        InlineKeyboardButton(text='💡 Пробный 1кр — 1⭐', callback_data='stars_credits_1_1'), # Сначала кредиты, потом звезды
+        InlineKeyboardButton(text='60 кр — 100⭐ (-18%)', callback_data='stars_credits_60_100'),
+        InlineKeyboardButton(text='150 кр — 200⭐ (-32%)', callback_data='stars_credits_150_200'),
+        InlineKeyboardButton(text='400 кр — 500⭐ (-40%)',callback_data='stars_credits_400_500'),
+        InlineKeyboardButton(text='500 кр — 600⭐ (-48%)',callback_data='stars_credits_500_600'),
+        InlineKeyboardButton(text='1200 кр — 1250⭐ (-48%)', callback_data='stars_credits_1200_1250'),
+        InlineKeyboardButton(text='3000 кр — 2750⭐ (-54%)',callback_data='stars_credits_3000_2750'),
+        InlineKeyboardButton(text='⬅️ Назад', callback_data='credits'),
+    ]
+
+    for button in buttons:
+        builder.row(button)
+
+    return builder.as_markup()
+
 settings = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Стиль изображений', callback_data='image_style')],
     [InlineKeyboardButton(text='Качество изображений', callback_data='image_quality')],
@@ -36,6 +58,12 @@ profile = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='⬅️ Вернуться в меню', callback_data='back')],
 ])
 
+set_method_payment = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='🌟 Telegram Stars', callback_data='telegram_stars')],
+    [InlineKeyboardButton(text='💳 FreeKassa', callback_data='freekassa')],
+    [InlineKeyboardButton(text='⬅️ В меню', callback_data='back')],
+
+])
 back = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='⬅️ Назад', callback_data='back')],
 ])
@@ -102,6 +130,10 @@ def get_payment_keyboard(url: str, order_id: int, amount: int) -> InlineKeyboard
     payment = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text='💳 Оплатить', url=url)],
         [InlineKeyboardButton(text='🔄 Проверить', callback_data=f"check_payment:{order_id}_{amount}")],
-        [InlineKeyboardButton(text='⬅️ Назад', callback_data='back_to_payment')],
+        [InlineKeyboardButton(text='⬅️ Назад', callback_data='back_to_payment_freekassa')],
     ])
     return payment
+
+back_to_payment_stars = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='⬅️ Назад', callback_data='telegram_stars')],
+])

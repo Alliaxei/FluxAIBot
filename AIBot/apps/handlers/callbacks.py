@@ -10,7 +10,6 @@ from aiogram.utils.media_group import MediaGroupBuilder
 
 from sqlalchemy import select, func
 
-
 from apps.database.database import async_session
 from apps.database.models import Gallery
 from apps.database.requests import update_user_size, add_credits, get_user_db_id, create_transaction, \
@@ -137,15 +136,29 @@ async def update_data_handler(callback: CallbackQuery):
     await asyncio.sleep(0.5)
 
 @router.callback_query(F.data == 'credits')
-async def credits_handler(callback: CallbackQuery, state: FSMContext):
+async def credits_handler(callback: CallbackQuery):
+    ''' Выбор способа оплаты '''
+    await callback.message.edit_text(text="Выберите способ для пополнения", reply_markup=kb.set_method_payment)
+
+@router.callback_query(F.data == 'freekassa')
+async def freekassa_handler(callback: CallbackQuery, state: FSMContext):
     sent_message = await callback.message.edit_text(
-        'Выберите сумму для пополнения 💸',
-        reply_markup=kb.credits
-    )
-    # Сохраняем message_id в состоянии
+       'Выберите сумму для пополнения 💸',
+       reply_markup=kb.credits)
+
     await state.set_state(BuyingState.waiting_for_transaction)
-    # Сохраняем message_id
     await state.update_data(message_id=sent_message.message_id)
+
+
+@router.callback_query(F.data == 'telegram_stars')
+async def freekassa_handler(callback: CallbackQuery, state: FSMContext):
+    sent_message = await callback.message.edit_text(
+        'Выберите сумму для пополнения с Telegram Stars 🌟',
+        reply_markup=kb.payment_keyboard())
+
+    await state.set_state(BuyingState.waiting_for_transaction)
+    await state.update_data(message_id=sent_message.message_id)
+
 
 @router.callback_query(F.data == 'back')
 async def back_handler(callback: CallbackQuery, state: FSMContext):
@@ -302,7 +315,7 @@ async def load_more_images(callback: CallbackQuery):
             await loading_message.edit_text("❌ Нет изображений для отображения.")
 
 
-@router.callback_query(F.data == 'back_to_payment')
+@router.callback_query(F.data == 'back_to_payment_freekassa')
 async def back_to_payment(callback: CallbackQuery, state: FSMContext):
     sent_message = await callback.message.edit_text(
         'Выберите сумму для пополнения 💸',

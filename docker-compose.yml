@@ -29,7 +29,7 @@ services:
     networks:
       - app_network
     command: >
-      sh -c "pip install -r requirements.txt && gunicorn DjangoProject.wsgi:application --bind 0.0.0.0:8000 --workers 4"
+      sh -c "pip install -r requirements.txt && gunicorn PaymentProject.wsgi:application --bind 0.0.0.0:8000 --workers 4"
 
   db:
     image: postgres:15

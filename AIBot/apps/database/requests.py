@@ -117,11 +117,14 @@ async def get_user_with_settings(session: AsyncSession, tg_id: int) -> User | No
         select(User).options(joinedload(User.settings)).where(User.telegram_id == tg_id)
     )
 
-async def create_transaction(session: AsyncSession, user_id: int, amount: int, order_id: str,
+async def create_transaction(session: AsyncSession, user_id: int, amount: int = None, order_id: str = "",
                              transaction_type: str = "recharge",
-                             transaction_status: str = "pending", credits_amount: int = 0):
+                             transaction_status: str = "pending", credits_amount: int = 0, stars_amount: int = None):
     """Создаёт запись о транзакции в базе данных."""
-    transaction = Transaction(user_id=user_id, amount=amount, order_id=order_id, transaction_type=transaction_type,
+    transaction = Transaction(user_id=user_id,
+                              amount=amount if stars_amount is None else None,
+                              stars_amount=stars_amount,
+                              order_id=order_id, transaction_type=transaction_type,
                               transaction_status=transaction_status, credits_amount=credits_amount)
     session.add(transaction)
     await session.commit()
